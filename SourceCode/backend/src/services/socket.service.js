@@ -1,11 +1,11 @@
-import { Server } from 'socket.io';
-import { verifyToken } from '../utils/jwt.js';
-import { env } from '../config/env.js';
+import { Server } from "socket.io";
+import { verifyToken } from "../utils/jwt.js";
+import { env } from "../config/env.js";
 
 let io = null;
 
 const ROOMS = {
-  ADMIN: 'admin',
+  ADMIN: "admin",
   user: (id) => `user:${id}`,
   seller: (id) => `seller:${id}`,
   order: (id) => `order:${id}`,
@@ -14,7 +14,7 @@ const ROOMS = {
 export function createSocketService(httpServer) {
   io = new Server(httpServer, {
     cors: {
-      origin: env.frontendUrl || '*',
+      origin: env.corsOrigins || [env.frontendUrl].filter(Boolean),
       credentials: true,
     },
     pingInterval: 25000,
@@ -24,30 +24,30 @@ export function createSocketService(httpServer) {
   io.use((socket, next) => {
     const token = socket.handshake.auth?.token || socket.handshake.query?.token;
     if (!token) {
-      return next(new Error('Authentication required'));
+      return next(new Error("Authentication required"));
     }
     try {
       const decoded = verifyToken({ token, secret: env.jwt.accessSecret });
       socket.user = decoded;
       next();
     } catch (err) {
-      return next(new Error('Invalid or expired token'));
+      return next(new Error("Invalid or expired token"));
     }
   });
 
-  io.on('connection', (socket) => {
+  io.on("connection", (socket) => {
     const { id, role } = socket.user;
 
     socket.join(ROOMS.user(id));
 
-    if (role === 'ROLE_ADMIN') {
+    if (role === "ROLE_ADMIN") {
       socket.join(ROOMS.ADMIN);
     }
-    if (role === 'ROLE_SELLER') {
+    if (role === "ROLE_SELLER") {
       socket.join(ROOMS.seller(id));
     }
 
-    socket.on('disconnect', () => {});
+    socket.on("disconnect", () => {});
   });
 
   return io;
@@ -55,15 +55,18 @@ export function createSocketService(httpServer) {
 
 export function getIO() {
   if (!io) {
-    throw new Error('Socket.IO not initialized. Call createSocketService first.');
+    throw new Error(
+      "Socket.IO not initialized. Call createSocketService first.",
+    );
   }
   return io;
 }
 
 function toPlain(data) {
   if (!data) return {};
-  if (typeof data.toObject === 'function') return data.toObject({ virtuals: false });
-  if (typeof data.toJSON === 'function') return data.toJSON();
+  if (typeof data.toObject === "function")
+    return data.toObject({ virtuals: false });
+  if (typeof data.toJSON === "function") return data.toJSON();
   return data;
 }
 
