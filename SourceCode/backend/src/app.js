@@ -313,15 +313,7 @@ export const createApp = async ({ env, dbManager }) =>
     app.use(helmet());
     app.use(
         cors({
-            origin: [
-                "https://e-commerce-project-iota-ten.vercel.app",
-                "http://localhost:3000",
-                "http://192.168.1.22:3000",
-                "https://ai-agent-fashion.vercel.app",
-                
-                ...(env.frontendUrl ? [env.frontendUrl] : []),
-                ...(env.corsOrigins || []),
-            ],
+            origin: true, // Allow all origins for development; adjust in production
             credentials: true,
         })
     );
