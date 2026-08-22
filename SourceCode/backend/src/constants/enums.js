@@ -1,0 +1,327 @@
+/**
+ * Centralized application constants.
+ * 
+ * These immutable values represent core business rules:
+ * - User roles
+ * - Account lifecycle states
+ * - Order processing states
+ * - Payment statuses and methods
+ * 
+ * Object.freeze() prevents accidental modification.
+ * Keeping them centralized avoids duplicate values across the application.
+ */
+
+// Application user roles
+export const ROLES = Object.freeze({
+  CUSTOMER: 'ROLE_CUSTOMER',
+  SELLER: 'ROLE_SELLER',
+  ADMIN: 'ROLE_ADMIN',
+});
+
+// User account lifecycle states
+export const ACCOUNT_STATUS = Object.freeze({
+  PENDING_VERIFICATION: 'PENDING_VERIFICATION',
+  ACTIVE: 'ACTIVE',
+  SUSPENDED: 'SUSPENDED',
+  BANNED: 'BANNED',
+});
+
+// Order lifecycle states
+export const ORDER_STATUS = Object.freeze({
+  PENDING: 'PENDING',
+  PLACED: 'PLACED',
+  CONFIRMED: 'CONFIRMED',
+  PACKED: 'PACKED',
+  SHIPPED: 'SHIPPED',
+  OUT_FOR_DELIVERY: 'OUT_FOR_DELIVERY',
+  DELIVERED: 'DELIVERED',
+  CANCELLED: 'CANCELLED',
+});
+
+// Payment transaction states
+export const PAYMENT_STATUS = Object.freeze({
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+});
+
+// Supported payment gateways
+export const PAYMENT_METHODS = Object.freeze({
+  RAZORPAY: 'RAZORPAY',
+  STRIPE: 'STRIPE',
+});
+
+// Supported shipping carriers
+export const CARRIERS = Object.freeze({
+  DELHIVERY: 'DELHIVERY',
+  BLUE_DART: 'BLUE_DART',
+  DTDC: 'DTDC',
+  INDIA_POST: 'INDIA_POST',
+  XPRESS_BEES: 'XPRESS_BEES',
+  EKART: 'EKART',
+  SHADOWFAX: 'SHADOWFAX',
+  OTHER: 'OTHER',
+});
+
+// Shipment lifecycle states
+export const SHIPMENT_STATUS = Object.freeze({
+  UNFULFILLED: 'UNFULFILLED',
+  PACKING: 'PACKING',
+  SHIPPED: 'SHIPPED',
+  OUT_FOR_DELIVERY: 'OUT_FOR_DELIVERY',
+  DELIVERED: 'DELIVERED',
+  RETURNED: 'RETURNED',
+});
+
+// Return request lifecycle states
+export const RETURN_STATUS = Object.freeze({
+  REQUESTED: 'REQUESTED',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  ITEM_RECEIVED: 'ITEM_RECEIVED',
+  REFUND_COMPLETED: 'REFUND_COMPLETED',
+});
+
+// Standardized reasons for return requests
+export const RETURN_REASON = Object.freeze({
+  DEFECTIVE_PRODUCT: 'DEFECTIVE_PRODUCT',
+  WRONG_ITEM_RECEIVED: 'WRONG_ITEM_RECEIVED',
+  NOT_AS_DESCRIBED: 'NOT_AS_DESCRIBED',
+  CHANGE_OF_MIND: 'CHANGE_OF_MIND',
+  DAMAGED_IN_TRANSIT: 'DAMAGED_IN_TRANSIT',
+  SIZE_OR_FIT_ISSUE: 'SIZE_OR_FIT_ISSUE',
+  MISSING_ACCESSORIES: 'MISSING_ACCESSORIES',
+  QUALITY_ISSUE: 'QUALITY_ISSUE',
+  OTHER: 'OTHER',
+});
+
+// Refund processing states
+export const REFUND_STATUS = Object.freeze({
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+});
+
+// Refund delivery method
+export const REFUND_METHOD = Object.freeze({
+  ORIGINAL_PAYMENT: 'ORIGINAL_PAYMENT',
+  BANK_TRANSFER: 'BANK_TRANSFER',
+  STORE_CREDIT: 'STORE_CREDIT',
+});
+
+export const HOME_PAGE_SECTIONS = Object.freeze({
+  ELECTRIC_CATEGORIES: 'ELECTRIC_CATEGORIES',
+  GRID: 'GRID',
+  SHOP_BY_CATEGORIES: 'SHOP_BY_CATEGORIES',
+  DEALS: 'DEALS',
+});
+
+export const HOME_PAGE_SECTION_VALUES = Object.freeze(
+  Object.values(HOME_PAGE_SECTIONS)
+);
+
+// Maximum allowed category depth in the hierarchy.
+export const MAX_CATEGORY_DEPTH = 3;
+
+export const HOME_PAGE_SECTION_LIMITS = Object.freeze({
+  GRID: 8,
+  DEALS: 20,
+  ELECTRIC_CATEGORIES: 12,
+  SHOP_BY_CATEGORIES: 16,
+});
+
+// Seller verification lifecycle states
+export const VERIFICATION_STATUS = Object.freeze({
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+});
+
+// Product moderation approval states
+export const PRODUCT_APPROVAL_STATUS = Object.freeze({
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+});
+
+// Product publish lifecycle states
+export const PUBLISH_STATUS = Object.freeze({
+  DRAFT: 'DRAFT',
+  PUBLISHED: 'PUBLISHED',
+  UNPUBLISHED: 'UNPUBLISHED',
+});
+
+// Customer segmentation labels
+export const CUSTOMER_SEGMENTS = Object.freeze({
+  ALL_CUSTOMERS: 'ALL_CUSTOMERS',
+  NEW_CUSTOMER: 'SEGMENT_NEW_CUSTOMER',
+  RETURNING_CUSTOMER: 'SEGMENT_RETURNING_CUSTOMER',
+  REGULAR_CUSTOMER: 'SEGMENT_REGULAR_CUSTOMER',
+  TOP_CUSTOMER: 'SEGMENT_TOP_CUSTOMER',
+  VIP_CUSTOMER: 'SEGMENT_VIP_CUSTOMER',
+  INACTIVE_CUSTOMER: 'SEGMENT_INACTIVE_CUSTOMER',
+  HIGH_SPENDER: 'SEGMENT_HIGH_SPENDER',
+  FREQUENT_BUYER: 'SEGMENT_FREQUENT_BUYER',
+});
+
+export const CUSTOMER_SEGMENT_VALUES = Object.freeze(
+  Object.values(CUSTOMER_SEGMENTS)
+);
+
+// Seller segmentation labels
+export const SELLER_SEGMENTS = Object.freeze({
+  ALL_SELLERS: 'ALL_SELLERS',
+  NEW_SELLER: 'SEGMENT_NEW_SELLER',
+  ACTIVE_SELLER: 'SEGMENT_ACTIVE_SELLER',
+  TOP_SELLER: 'SEGMENT_TOP_SELLER',
+  HIGH_REVENUE_SELLER: 'SEGMENT_HIGH_REVENUE_SELLER',
+  FAST_GROWING_SELLER: 'SEGMENT_FAST_GROWING_SELLER',
+  PREMIUM_SELLER: 'SEGMENT_PREMIUM_SELLER',
+  TRUSTED_SELLER: 'SEGMENT_TRUSTED_SELLER',
+});
+
+export const SELLER_SEGMENT_VALUES = Object.freeze(
+  Object.values(SELLER_SEGMENTS)
+);
+
+// Commission lifecycle states
+export const COMMISSION_STATUS = Object.freeze({
+  CALCULATED: 'CALCULATED',
+  APPROVED: 'APPROVED',
+  SETTLED: 'SETTLED',
+  CANCELLED: 'CANCELLED',
+});
+
+// Payout lifecycle states
+export const PAYOUT_STATUS = Object.freeze({
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  COMPLETED: 'COMPLETED',
+});
+
+// Gateway provider identifiers (customer payments + seller payouts)
+export const GATEWAY = Object.freeze({
+  MOCK_RAZORPAYX: 'MOCK_RAZORPAYX',
+  MOCK_RAZORPAY: 'MOCK_RAZORPAY',
+  RAZORPAY: 'RAZORPAY',
+  RAZORPAYX: 'RAZORPAYX',
+  STRIPE: 'STRIPE',
+  CASHFREE: 'CASHFREE',
+  PHONEPE: 'PHONEPE',
+  PAYPAL: 'PAYPAL',
+});
+
+// Gateway-level payout status (separate from business PAYOUT_STATUS)
+export const GATEWAY_PAYOUT_STATUS = Object.freeze({
+  PENDING: 'pending',
+  PROCESSING: 'processing',
+  PROCESSED: 'processed',
+  FAILED: 'failed',
+  CANCELLED: 'cancelled',
+  REVERSED: 'reversed',
+});
+
+// Gateway-level refund status (separate from business REFUND_STATUS)
+export const GATEWAY_REFUND_STATUS = Object.freeze({
+  PENDING: 'pending',
+  PROCESSING: 'processing',
+  PROCESSED: 'processed',
+  FAILED: 'failed',
+  CANCELLED: 'cancelled',
+  REVERSED: 'reversed',
+});
+
+// Gateway event types (append-only event log)
+// Uppercase = mock gateways write these (enum constants)
+// Lowercase = business services write these at initiation/webhook time
+export const GATEWAY_EVENT_TYPE = Object.freeze({
+  PAYOUT_REQUESTED: 'PAYOUT_REQUESTED',
+  PAYOUT_PROCESSING: 'PAYOUT_PROCESSING',
+  PAYOUT_WEBHOOK_RECEIVED: 'PAYOUT_WEBHOOK_RECEIVED',
+  PAYOUT_PROCESSED: 'PAYOUT_PROCESSED',
+  PAYOUT_FAILED: 'PAYOUT_FAILED',
+  PAYOUT_CANCELLED: 'PAYOUT_CANCELLED',
+  PAYOUT_RETRY: 'PAYOUT_RETRY',
+  REFUND_REQUESTED: 'REFUND_REQUESTED',
+  REFUND_PROCESSING: 'REFUND_PROCESSING',
+  REFUND_WEBHOOK_RECEIVED: 'REFUND_WEBHOOK_RECEIVED',
+  REFUND_PROCESSED: 'REFUND_PROCESSED',
+  REFUND_FAILED: 'REFUND_FAILED',
+  REFUND_RETRY: 'REFUND_RETRY',
+  PAYOUT_INITIATED: 'payout.initiated',
+  PAYOUT_WEBHOOK: 'payout.webhook',
+  REFUND_INITIATED: 'refund.initiated',
+  REFUND_WEBHOOK: 'refund.webhook',
+});
+
+// Brand request lifecycle states
+export const BRAND_REQUEST_STATUS = Object.freeze({
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+});
+
+// Brand sort options for listing
+export const BRAND_SORT_OPTIONS = Object.freeze({
+  NAME_ASC: 'name_asc',
+  NAME_DESC: 'name_desc',
+  CREATED_ASC: 'created_asc',
+  CREATED_DESC: 'created_desc',
+  DISPLAY_ORDER: 'display_order',
+});
+
+// Coupon scope types
+export const COUPON_SCOPE = Object.freeze({
+  ALL: 'ALL',
+  CATEGORY: 'CATEGORY',
+  PRODUCT: 'PRODUCT',
+  ORDER: 'ORDER',
+  SELLER_STORE: 'SELLER_STORE',
+});
+
+export const COUPON_SCOPE_VALUES = Object.freeze(
+  Object.values(COUPON_SCOPE)
+);
+
+// Automatic coupon distribution trigger types
+export const COUPON_TRIGGER_TYPES = Object.freeze({
+  WELCOME_REGISTRATION: 'WELCOME_REGISTRATION',
+  BIRTHDAY: 'BIRTHDAY',
+  ANNIVERSARY: 'ANNIVERSARY',
+  FIRST_PURCHASE: 'FIRST_PURCHASE',
+  REFERRAL: 'REFERRAL',
+  CART_ABANDONMENT: 'CART_ABANDONMENT',
+  INACTIVE_CUSTOMER: 'INACTIVE_CUSTOMER',
+  VIP_ACHIEVEMENT: 'VIP_ACHIEVEMENT',
+  SELLER_MILESTONE: 'SELLER_MILESTONE',
+});
+
+export const COUPON_TRIGGER_VALUES = Object.freeze(
+  Object.values(COUPON_TRIGGER_TYPES)
+);
+
+// Coupon assignment statuses
+export const COUPON_ASSIGNMENT_STATUS = Object.freeze({
+  ASSIGNED: 'ASSIGNED',
+  CLAIMED: 'CLAIMED',
+  EXPIRED: 'EXPIRED',
+  USED: 'USED',
+});
+
+export const COUPON_ASSIGNMENT_STATUS_VALUES = Object.freeze(
+  Object.values(COUPON_ASSIGNMENT_STATUS)
+);
+
+// Status history actor types (who performed a status transition)
+export const STATUS_HISTORY_ACTOR = Object.freeze({
+  USER: 'User',
+  SELLER: 'Seller',
+  ADMIN: 'Admin',
+  SYSTEM: 'System',
+});
+
+export const STATUS_HISTORY_ACTOR_VALUES = Object.freeze(
+  Object.values(STATUS_HISTORY_ACTOR)
+);

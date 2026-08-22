@@ -1,0 +1,135 @@
+import mongoose from 'mongoose';
+import { ROLES } from '../../constants/enums.js';
+
+/**
+ * Address subdocument stored inside the User document.
+ * Used to manage multiple shipping/billing addresses.
+ */
+const AddressSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: [true, 'Name for address is required'],
+        trim: true,
+    },
+    mobile: {
+        type: String,
+        required: [true, 'Contact number is required'],
+        trim: true,
+    },
+    streetAddress: {
+        type: String,
+        required: [true, 'Street address is required'],
+        trim: true,
+    },
+    locality: {
+        type: String,
+        required: [true, 'Locality is required'],
+        trim: true,
+    },
+    city: {
+        type: String,
+        required: [true, 'City is required'],
+        trim: true,
+    },
+    state: {
+        type: String,
+        required: [true, 'State is required'],
+        trim: true,
+    },
+    pinCode: {
+        type: String,
+        required: [true, 'Pin code is required'],
+        trim: true,
+    },
+    isDefault: {
+        type: Boolean,
+        default: false,
+    },
+}, {
+    // Each address gets its own unique ID.
+    _id: true,
+});
+
+/**
+ * User schema containing authentication and profile information.
+ */
+const UserSchema = new mongoose.Schema({
+    fullName: {
+        type: String,
+        required: [true, 'Full name is required'],
+        trim: true,
+    },
+    email: {
+        type: String,
+        required: [true, 'Email is required'],
+        unique: true,
+        lowercase: true,
+        trim: true,
+        match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email address'],
+    },
+    passwordHash: {
+        // Can remain empty for passwordless/OTP authentication.
+        // Excluded from default queries via `select: false`; only fetched
+        // explicitly when verifying credentials (see findByEmailWithPassword).
+        type: String,
+        select: false,
+    },
+    mobile: {
+        type: String,
+        trim: true,
+    },
+    role: {
+        type: String,
+        enum: Object.values(ROLES),
+        default: ROLES.CUSTOMER,
+    },
+
+    // Centralized profile image for all roles (Customer, Seller, Admin).
+    profileImage: {
+        type: String,
+        trim: true,
+        default: null,
+    },
+    profileImageId: {
+        // Cloudinary public ID for deletion on replacement.
+        type: String,
+        trim: true,
+        default: null,
+    },
+
+    // Embedded list of user addresses.
+    addresses: [AddressSchema],
+
+    // References to coupons already used by the user.
+    usedCoupons: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Coupon',
+    }],
+
+    // Automatic coupon distribution fields
+    birthDate: {
+        type: Date,
+        default: null,
+    },
+    referredBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        default: null,
+    },
+    referralCode: {
+        type: String,
+        unique: true,
+        sparse: true,
+        trim: true,
+        default: null,
+    },
+}, {
+    // Automatically adds createdAt and updatedAt fields.
+    timestamps: true,
+});
+
+// Indexes to improve query performance.
+// UserSchema.index({ email: 1 });
+// UserSchema.index({ role: 1 });
+
+export const User = mongoose.model('User', UserSchema);

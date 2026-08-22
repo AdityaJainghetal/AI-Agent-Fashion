@@ -1,0 +1,124 @@
+import { useEffect, useRef, useState } from 'react';
+import './App.css';
+import { ThemeProvider } from '@emotion/react';
+import customeTheme from './Theme/customeTheme';
+import { Route, Routes, Navigate } from 'react-router-dom';
+
+import SellerDashboard from './seller/pages/SellerDashboard/SellerDashboard';
+import CustomerRoutes from './routes/CustomerRoutes';
+import NotificationProvider from './components/shared/NotificationProvider';
+import AdminDashboard from './admin/pages/Dashboard/Dashboard';
+import SellerAccountVerification from './seller/pages/SellerAccountVerification';
+import SellerAccountVerified from './seller/pages/SellerAccountVerified';
+import { useAppDispatch, useAppSelector } from './Redux Toolkit/Store';
+import { fetchSellerProfile } from './Redux Toolkit/Seller/sellerSlice';
+import BecomeSeller from './customer/pages/BecomeSeller/BecomeSeller';
+import SellerForgotPassword from './seller/pages/Auth/SellerForgotPassword';
+import SellerResetPassword from './seller/pages/Auth/SellerResetPassword';
+import AdminAuth from './admin/pages/Auth/AdminAuth';
+import { fetchUserProfile } from './Redux Toolkit/Customer/UserSlice';
+import { fetchHomePageData } from './Redux Toolkit/Customer/Customer/AsyncThunk';
+import { useSocket } from './hooks/useSocket';
+import SocketEventHandler from './components/shared/SocketEventHandler';
+import { getJwtPayload, isAuthenticated } from './util/requireAuth';
+
+function App()
+{
+  const dispatch = useAppDispatch()
+  const { auth, sellerAuth, sellers, user } = useAppSelector(store => store)
+  const [bootstrapping, setBootstrapping] = useState(true);
+  const jwtRef = useRef<string | null>(auth.jwt || sellerAuth.jwt);
+  jwtRef.current = auth.jwt || sellerAuth.jwt;
+  useSocket();
+
+  useEffect(() => {
+    const bootstrap = async () => {
+      const jwt =
+        localStorage.getItem("jwt") ||
+        jwtRef.current;
+
+      if (!jwt) {
+        setBootstrapping(false);
+        return;
+      }
+
+      try {
+        const payload = getJwtPayload(jwt);
+
+        if (!payload || !isAuthenticated()) {
+          localStorage.removeItem("jwt");
+          setBootstrapping(false);
+          return;
+        }
+
+        if (payload.role === "ROLE_SELLER") {
+          await dispatch(fetchSellerProfile(jwt));
+        } else {
+          await dispatch(fetchUserProfile({ jwt }));
+        }
+      } catch (err) {
+        console.error(err);
+        localStorage.removeItem("jwt");
+      } finally {
+        setBootstrapping(false);
+      }
+    };
+
+    bootstrap();
+  }, [dispatch]);
+
+  useEffect(() =>
+  {
+    dispatch(fetchHomePageData())
+  }, [dispatch])
+
+
+  if (bootstrapping) return null;
+
+  return (
+    <ThemeProvider theme={customeTheme}>
+      <div className='App' data-build="BUILDMARKERXYZ_2608" >
+        <NotificationProvider />
+        <SocketEventHandler />
+
+        <Routes>
+          <Route
+            path='/seller/*'
+            element={
+              sellers.profile ? (
+                <SellerDashboard />
+              ) : (
+                <Navigate to="/become-seller" replace />
+              )
+            }
+          />
+          <Route
+            path='/admin/*'
+            element={
+              user.user?.role === "ROLE_ADMIN" ? (
+                <AdminDashboard />
+              ) : (
+                <Navigate to="/admin-login" replace />
+              )
+            }
+          />
+          <Route path='/verify-seller/:otp' element={<SellerAccountVerification />} />
+          <Route path='/seller-account-verified' element={<SellerAccountVerified />} />
+          <Route path='/become-seller' element={<BecomeSeller />} />
+          <Route path='/seller/forgot-password' element={<SellerForgotPassword />} />
+          <Route path='/seller/reset-password' element={<SellerResetPassword />} />
+          <Route path='/admin-login' element={<AdminAuth />} />
+
+          <Route path='*' element={
+            user.user?.role === "ROLE_ADMIN" ? <Navigate to="/admin" replace /> :
+            sellers.profile ? <Navigate to="/seller" replace /> :
+            <CustomerRoutes />
+          } />
+
+        </Routes>
+      </div>
+    </ThemeProvider>
+  );
+}
+
+export default App;

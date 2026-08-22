@@ -1,0 +1,14 @@
+
+.App {
+  font-family: "Open Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}
+
+@media (max-width: 480px) {
+  .slide-container {
+    overflow-x: hidden;
+  }
+}
