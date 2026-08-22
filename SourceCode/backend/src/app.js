@@ -317,6 +317,8 @@ export const createApp = async ({ env, dbManager }) =>
                 "https://e-commerce-project-iota-ten.vercel.app",
                 "http://localhost:3000",
                 "http://192.168.1.22:3000",
+                "https://ai-agent-fashion.vercel.app",
+                
                 ...(env.frontendUrl ? [env.frontendUrl] : []),
                 ...(env.corsOrigins || []),
             ],
