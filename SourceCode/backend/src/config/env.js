@@ -40,7 +40,7 @@ const configuration = {
   // groqApiKey: process.env.GROQ_API_KEY,
   // groqModel: process.env.GROQ_MODEL || "llama-3.3-70b-versatile",
   logLevel: process.env.LOG_LEVEL || "info",
-  frontendUrl: process.env.FRONTEND_URL,
+  frontendUrl: process.env.FRONTEND_URL || "https://ai-agent-fashion.vercel.app",
   apiBaseUrl: process.env.API_BASE_URL,
 
   cloudinary: {
@@ -83,7 +83,7 @@ const configuration = {
   // Local development and hosted frontend CORS setup
   corsOrigins: [
     process.env.FRONTEND_URL,
-    ...(process.env.CORS_ORIGINS || "").split(","),
+    ...(process.env.CORS_ORIGINS || "https://ai-agent-fashion.vercel.app").split(","),
   ]
     .map((origin) => (origin || "").trim().replace(/\/$/, ""))
     .filter(
